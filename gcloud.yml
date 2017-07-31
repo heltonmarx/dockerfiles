@@ -1,0 +1,13 @@
+version: '2'
+services:
+  # pubsub =====================================================================
+  pubsub:
+    image: "google/cloud-sdk"
+    container_name: gcloud-pubsub
+    ports:
+      - "8042:8042"
+    environment:
+      PUBSUB_EMULATOR_HOST: 0.0.0.0:8042
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+    command: /bin/bash -c "gcloud beta emulators pubsub start --host-port=0.0.0.0:8042"
+
