@@ -1,0 +1,33 @@
+version: '2'
+services:
+  node-exporter:
+    image: "prom/node-exporter"
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+
+  prometheus:
+    image: "prom/prometheus"
+    container_name: prometheus
+    depends_on:
+      - node-exporter
+    ports:
+      - "9090:9090"
+    links:
+      - node-exporter:9100
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: >-
+      '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: "grafana/grafana"
+    container_name: grafana
+    depends_on:
+      - prometheus
+    links:
+      - prometheus:9090
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
